@@ -1,38 +1,43 @@
 import { BouncerOptions, BouncingElement } from './interfaces';
+import { fps, random } from './helpers';
 
 class Bouncer {
   private interval: number = 0;
-  private elements: BouncingElement[];
+  private elements: BouncingElement[] = [];
 
-  private width: number;
-  private height: number;
+  private width: number = window.innerWidth;
+  private height: number = window.innerHeight;
 
   constructor(options: BouncerOptions) {
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
-
-    this.elements = [];
-
     this.setup(options);
-    window.addEventListener('resize', this.frame.bind(this));
+    window.addEventListener('resize', this.setup.bind(this, options));
   }
 
   private setup(options: BouncerOptions): void {
     clearInterval(this.interval);
 
-    for (const el of document.querySelectorAll<HTMLElement>(options.selector ?? '.bounce')) {
-      this.elements.push({
-        element: el,
-        x: random(this.width),
-        y: random(this.height),
-        xSpeed: random(2),
-        ySpeed: random(3),
-        direction: Math.random() > 0.5 ? 1 : -1,
-        tranformers: options.frameTransformers,
-        data: options.frameTransformers.reduce((d: any, t) => ((d[t.key] = t.initialValue), d), {})
-      });
-      el.style.position = 'absolute';
-    }
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+
+    this.elements = [...document.querySelectorAll<HTMLElement>(options.selector ?? '.bounce')].map(
+      el => {
+        el.style.position = 'absolute';
+
+        return {
+          element: el,
+          x: random(this.width),
+          y: random(this.height),
+          xSpeed: random(2),
+          ySpeed: random(3),
+          direction: Math.random() > 0.5 ? 1 : -1,
+          tranformers: options.frameTransformers,
+          data: options.frameTransformers.reduce(
+            (d: any, t) => ((d[t.key] = t.initialValue), d),
+            {}
+          )
+        };
+      }
+    );
 
     this.interval = setInterval(this.frame.bind(this), fps(options.fps ?? 120));
   }
@@ -67,8 +72,5 @@ class Bouncer {
     }
   }
 }
-
-const random = (max: number) => Math.floor(Math.random() * max) + 1;
-const fps = (n: number) => Math.floor((1 / n) * 1000);
 
 export default Bouncer;
