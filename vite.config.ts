@@ -1,10 +1,10 @@
-const path = require('path');
-const { defineConfig } = require('vite');
+import { resolve } from 'path';
+import { defineConfig } from 'vite';
 
-module.exports = defineConfig({
+export default defineConfig({
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'lib/main.ts'),
+      entry: resolve(__dirname, 'lib/main.ts'),
       name: 'Bouncer',
       formats: ['es', 'cjs', 'umd', 'iife'],
       fileName: format => `bouncing-element.${format}.js`

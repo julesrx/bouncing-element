@@ -2,7 +2,7 @@ import { BouncerOptions, BouncingElement } from './interfaces';
 import { fps, random } from './helpers';
 
 class Bouncer {
-  private interval: number = 0;
+  private interval: NodeJS.Timer | undefined;
   private elements: BouncingElement[] = [];
 
   private width: number = window.innerWidth;
@@ -14,7 +14,7 @@ class Bouncer {
   }
 
   private setup(options?: BouncerOptions): void {
-    clearInterval(this.interval);
+    if (this.interval) clearInterval(this.interval);
 
     this.width = window.innerWidth;
     this.height = window.innerHeight;
