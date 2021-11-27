@@ -6,6 +6,7 @@
   ],
   "main": "./dist/bouncing-element.umd.js",
   "module": "./dist/bouncing-element.es.js",
+  "types": "./dist/lib/main.d.ts",
   "exports": {
     ".": {
       "import": "./dist/bouncing-element.es.js",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@types/node": "^16.11.10",
     "typescript": "^4.3.2",
-    "vite": "^2.6.4"
+    "vite": "^2.6.4",
+    "vite-plugin-dts": "^0.9.6"
   }
 }
