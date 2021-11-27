@@ -1,0 +1,24 @@
+{
+  "name": "bouncing-element",
+  "version": "1.0.0",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/bouncing-element.umd.js",
+  "module": "./dist/bouncing-element.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/bouncing-element.es.js",
+      "require": "./dist/bouncing-element.umd.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.2",
+    "vite": "^2.6.4"
+  }
+}

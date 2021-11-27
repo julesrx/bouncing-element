@@ -1,0 +1,10 @@
+body {
+  background-color: #000;
+  overflow: hidden;
+  color: #fff;
+}
+
+svg {
+  fill: currentColor;
+  height: 100px;
+}
