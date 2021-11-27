@@ -13,13 +13,13 @@ class Bouncer {
     window.addEventListener('resize', this.setup.bind(this, options));
   }
 
-  private setup(options: BouncerOptions): void {
+  private setup(options?: BouncerOptions): void {
     clearInterval(this.interval);
 
     this.width = window.innerWidth;
     this.height = window.innerHeight;
 
-    this.elements = [...document.querySelectorAll<HTMLElement>(options.selector ?? '.bounce')].map(
+    this.elements = [...document.querySelectorAll<HTMLElement>(options?.selector ?? '.bounce')].map(
       el => {
         el.style.position = 'absolute';
 
@@ -30,8 +30,8 @@ class Bouncer {
           xSpeed: random(2),
           ySpeed: random(3),
           direction: Math.random() > 0.5 ? 1 : -1,
-          tranformers: options.frameTransformers,
-          data: options.frameTransformers.reduce(
+          tranformers: options?.frameTransformers ?? [],
+          data: (options?.frameTransformers ?? []).reduce(
             (d: any, t) => ((d[t.key] = t.initialValue), d),
             {}
           )
@@ -39,7 +39,7 @@ class Bouncer {
       }
     );
 
-    this.interval = setInterval(this.frame.bind(this), fps(options.fps ?? 120));
+    this.interval = setInterval(this.frame.bind(this), fps(options?.fps ?? 120));
   }
 
   private frame(): void {
