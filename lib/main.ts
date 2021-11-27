@@ -1,41 +1,13 @@
-interface Options {
-  selector?: string;
-  fps?: number;
-
-  frameTransformers: FrameTransformer[];
-}
-
-interface FrameTransformer {
-  key: string;
-  initialValue: any;
-  tranformer(el: BounceElement, value: any): any;
-}
-
-interface BounceElement {
-  el: HTMLElement;
-
-  x: number;
-  y: number;
-
-  xspeed: number;
-  yspeed: number;
-
-  dir: number;
-
-  tranformers: FrameTransformer[];
-  data: {
-    [key: string]: any;
-  };
-}
+import { BouncerOptions, BouncingElement } from './interfaces';
 
 class Bouncer {
   private interval: number = 0;
-  private elements: BounceElement[];
+  private elements: BouncingElement[];
 
   private width: number;
   private height: number;
 
-  constructor(options: Options) {
+  constructor(options: BouncerOptions) {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
 
@@ -45,22 +17,20 @@ class Bouncer {
     window.addEventListener('resize', this.frame.bind(this));
   }
 
-  private setup(options: Options): void {
+  private setup(options: BouncerOptions): void {
     clearInterval(this.interval);
 
     for (const el of document.querySelectorAll<HTMLElement>(options.selector ?? '.bounce')) {
-      const b: BounceElement = {
-        el,
+      this.elements.push({
+        element: el,
         x: random(this.width),
         y: random(this.height),
-        xspeed: random(2),
-        yspeed: random(3),
-        dir: Math.random() > 0.5 ? 1 : -1,
+        xSpeed: random(2),
+        ySpeed: random(3),
+        direction: Math.random() > 0.5 ? 1 : -1,
         tranformers: options.frameTransformers,
         data: options.frameTransformers.reduce((d: any, t) => ((d[t.key] = t.initialValue), d), {})
-      };
-
-      this.elements.push(b);
+      });
       el.style.position = 'absolute';
     }
 
@@ -73,25 +43,25 @@ class Bouncer {
         el.data[t.key] = t.tranformer(el, el.data[t.key]);
       }
 
-      el.x = el.x + el.xspeed;
-      el.y = el.y + el.yspeed;
+      el.x = el.x + el.xSpeed;
+      el.y = el.y + el.ySpeed;
 
-      el.el.style.left = `${el.x}px`;
-      el.el.style.top = `${el.y}px`;
+      el.element.style.left = `${el.x}px`;
+      el.element.style.top = `${el.y}px`;
 
-      if (el.x + el.el.clientWidth >= this.width) {
-        el.xspeed = -el.xspeed;
-        el.x = this.width - el.el.clientWidth;
+      if (el.x + el.element.clientWidth >= this.width) {
+        el.xSpeed = -el.xSpeed;
+        el.x = this.width - el.element.clientWidth;
       } else if (el.x <= 0) {
-        el.xspeed = -el.xspeed;
+        el.xSpeed = -el.xSpeed;
         el.x = 0;
       }
 
-      if (el.y + el.el.clientHeight >= this.height) {
-        el.yspeed = -el.yspeed;
-        el.y = this.height - el.el.clientHeight;
+      if (el.y + el.element.clientHeight >= this.height) {
+        el.ySpeed = -el.ySpeed;
+        el.y = this.height - el.element.clientHeight;
       } else if (el.y <= 0) {
-        el.yspeed = -el.yspeed;
+        el.ySpeed = -el.ySpeed;
         el.y = 0;
       }
     }
