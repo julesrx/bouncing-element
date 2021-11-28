@@ -1,5 +1,7 @@
 # Bouncing Element
 
+![npm](https://img.shields.io/npm/v/bouncing-element)
+
 JavaScript library to reproduce the famous DVD screensaver with any DOM element.
 
 ## Installation
