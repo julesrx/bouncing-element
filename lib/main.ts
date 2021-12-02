@@ -27,8 +27,8 @@ class Bouncer {
           element: el,
           x: random(this.width),
           y: random(this.height),
-          xSpeed: random(2),
-          ySpeed: random(3),
+          xSpeed: random(2) * (Math.random() > 0.5 ? 1 : -1),
+          ySpeed: random(3) * (Math.random() > 0.5 ? 1 : -1),
           direction: Math.random() > 0.5 ? 1 : -1,
           tranformers: options?.frameTransformers ?? [],
           data: (options?.frameTransformers ?? []).reduce(
