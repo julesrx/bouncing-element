@@ -16,8 +16,8 @@ class Bouncer {
   private setup(options?: BouncerOptions): void {
     if (this.interval) clearInterval(this.interval);
 
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
+    this.width = window.innerWidth - 5;
+    this.height = window.innerHeight - 5;
 
     this.elements = [...document.querySelectorAll<HTMLElement>(options?.selector ?? '.bounce')].map(
       el => {
