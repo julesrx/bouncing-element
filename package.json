@@ -27,7 +27,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "publish": "npm publish"
+    "publish": "pnpm build && npm publish"
   },
   "devDependencies": {
     "@types/node": "^16.11.14",
