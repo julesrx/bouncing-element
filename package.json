@@ -27,7 +27,6 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "prepublishOnly": "pnpm build",
     "publish": "npm publish"
   },
   "devDependencies": {
