@@ -15,7 +15,7 @@ JavaScript library to reproduce the famous DVD screensaver with any DOM element.
 - Using npm:
 
 ```bash
-$ npm i bouncing-element
+npm i bouncing-element
 ```
 
 ## Usage
