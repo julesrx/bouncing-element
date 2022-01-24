@@ -1,8 +1,8 @@
 import { BouncerOptions, BouncingElement } from './interfaces';
-import { fps, random } from './helpers';
+import { random } from './helpers';
 
 class Bouncer {
-  private interval: NodeJS.Timer | undefined;
+  private frameNumber?: number;
   private elements: BouncingElement[] = [];
 
   private width: number = window.innerWidth;
@@ -14,7 +14,7 @@ class Bouncer {
   }
 
   private setup(options?: BouncerOptions): void {
-    if (this.interval) clearInterval(this.interval);
+    if (this.frameNumber) window.cancelAnimationFrame(this.frameNumber);
 
     this.width = window.innerWidth - 5;
     this.height = window.innerHeight - 5;
@@ -39,7 +39,7 @@ class Bouncer {
       }
     );
 
-    this.interval = setInterval(this.frame.bind(this), fps(options?.fps ?? 120));
+    this.frameNumber = window.requestAnimationFrame(this.frame.bind(this));
   }
 
   private frame(): void {
@@ -70,6 +70,8 @@ class Bouncer {
         el.y = 0;
       }
     }
+
+    this.frameNumber = window.requestAnimationFrame(this.frame.bind(this));
   }
 }
 

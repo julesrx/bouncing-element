@@ -28,9 +28,6 @@ new Bouncer({
   // querySelector (default '.bounce')
   selector: '.bounce',
 
-  // frames per second (default 120)
-  fps: 120,
-
   // frame transformers (default [])
   // used to add different effects to the elements for each frame
   frameTransformers: [

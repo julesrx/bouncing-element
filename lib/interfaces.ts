@@ -1,6 +1,5 @@
 export interface BouncerOptions {
   selector?: string;
-  fps?: number;
 
   frameTransformers: FrameTransformer[];
 }

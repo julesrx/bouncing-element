@@ -3,7 +3,6 @@ import Bouncer from '../lib/main';
 
 new Bouncer({
   selector: '.bounce',
-  fps: 120,
   frameTransformers: [
     {
       key: 'hue',
