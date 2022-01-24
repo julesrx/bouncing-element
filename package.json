@@ -27,8 +27,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "prepublishOnly": "pnpm build",
-    "publish": "npm publish"
+    "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
     "@types/node": "^16.11.14",
