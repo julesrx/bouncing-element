@@ -8,7 +8,7 @@ class Bouncer {
   private width: number = window.innerWidth;
   private height: number = window.innerHeight;
 
-  constructor(options: BouncerOptions) {
+  constructor(options?: BouncerOptions) {
     this.setup(options);
     window.addEventListener('resize', this.setup.bind(this, options));
   }
