@@ -1,78 +1,119 @@
-import { BouncerOptions, BouncingElement } from './interfaces';
-import { random } from './helpers';
+import type { BouncingElement, BouncerOptions } from './interfaces';
+import { random } from './utils';
 
-class Bouncer {
-  private frameNumber?: number;
-  private elements: BouncingElement[] = [];
+const createBouncer = (
+    elements: HTMLElement[] | HTMLCollectionOf<HTMLElement> | HTMLCollectionOf<Element>,
+    opts?: BouncerOptions
+) => {
+    const options = { start: true, insert: false, frameTransformers: [], ...opts };
 
-  private width: number = window.innerWidth;
-  private height: number = window.innerHeight;
+    let started = false;
+    let bouncers: BouncingElement[];
+    let width: number;
+    let height: number;
+    let frameNumber: number;
 
-  constructor(options?: BouncerOptions) {
-    this.setup(options);
-    window.addEventListener('resize', this.setup.bind(this, options));
-  }
+    const start = () => {
+        if (started) return;
+        started = true;
 
-  private setup(options?: BouncerOptions): void {
-    if (this.frameNumber) window.cancelAnimationFrame(this.frameNumber);
+        setup();
+        window.addEventListener('resize', setup);
+    };
 
-    this.width = window.innerWidth - 5;
-    this.height = window.innerHeight - 5;
+    const setup = (): void => {
+        cancelAnimationFrame();
 
-    this.elements = [...document.querySelectorAll<HTMLElement>(options?.selector ?? '.bounce')].map(
-      el => {
-        el.style.position = 'absolute';
+        width = window.innerWidth - 5;
+        height = window.innerHeight - 5;
 
-        return {
-          element: el,
-          x: random(this.width),
-          y: random(this.height),
-          xSpeed: random(2) * (Math.random() > 0.5 ? 1 : -1),
-          ySpeed: random(3) * (Math.random() > 0.5 ? 1 : -1),
-          direction: Math.random() > 0.5 ? 1 : -1,
-          tranformers: options?.frameTransformers ?? [],
-          data: (options?.frameTransformers ?? []).reduce(
-            (d: any, t) => ((d[t.key] = t.initialValue), d),
-            {}
-          )
-        };
-      }
-    );
+        bouncers = [...elements].map(el => {
+            const element = el as HTMLElement;
 
-    this.frameNumber = window.requestAnimationFrame(this.frame.bind(this));
-  }
+            element.style.position = 'absolute';
 
-  private frame(): void {
-    for (const el of this.elements) {
-      for (const t of el.tranformers) {
-        el.data[t.key] = t.tranformer(el, el.data[t.key]);
-      }
+            if (options.insert) document.body.appendChild(element);
 
-      el.x = el.x + el.xSpeed;
-      el.y = el.y + el.ySpeed;
+            return {
+                element,
+                x: random(width),
+                y: random(height),
+                xSpeed: random(2) * (Math.random() > 0.5 ? 1 : -1),
+                ySpeed: random(3) * (Math.random() > 0.5 ? 1 : -1),
+                direction: Math.random() > 0.5 ? 1 : -1,
+                tranformers: opts?.frameTransformers ?? [],
+                data: (opts?.frameTransformers ?? []).reduce(
+                    (d: any, t) => ((d[t.key] = t.initialValue), d),
+                    {}
+                )
+            };
+        });
 
-      el.element.style.left = `${el.x}px`;
-      el.element.style.top = `${el.y}px`;
+        frameNumber = window.requestAnimationFrame(() => {
+            frame();
+            setBouncersVisibility(true);
+        });
+    };
 
-      if (el.x + el.element.clientWidth >= this.width) {
-        el.xSpeed = -el.xSpeed;
-        el.x = this.width - el.element.clientWidth;
-      } else if (el.x <= 0) {
-        el.xSpeed = -el.xSpeed;
-        el.x = 0;
-      }
+    const frame = (): void => {
+        for (const bo of bouncers) {
+            for (const t of bo.tranformers) {
+                bo.data[t.key] = t.tranformer(bo, bo.data[t.key]);
+            }
 
-      if (el.y + el.element.clientHeight >= this.height) {
-        el.ySpeed = -el.ySpeed;
-        el.y = this.height - el.element.clientHeight;
-      } else if (el.y <= 0) {
-        el.ySpeed = -el.ySpeed;
-        el.y = 0;
-      }
-    }
+            bo.x = bo.x + bo.xSpeed;
+            bo.y = bo.y + bo.ySpeed;
 
-    this.frameNumber = window.requestAnimationFrame(this.frame.bind(this));
-  }
-}
+            bo.element.style.left = `${bo.x}px`;
+            bo.element.style.top = `${bo.y}px`;
 
-export default Bouncer;
+            if (bo.x + bo.element.clientWidth >= width) {
+                bo.xSpeed = -bo.xSpeed;
+                bo.x = width - bo.element.clientWidth;
+            } else if (bo.x <= 0) {
+                bo.xSpeed = -bo.xSpeed;
+                bo.x = 0;
+            }
+
+            if (bo.y + bo.element.clientHeight >= height) {
+                bo.ySpeed = -bo.ySpeed;
+                bo.y = height - bo.element.clientHeight;
+            } else if (bo.y <= 0) {
+                bo.ySpeed = -bo.ySpeed;
+                bo.y = 0;
+            }
+        }
+
+        frameNumber = window.requestAnimationFrame(frame);
+    };
+
+    const stop = () => {
+        if (!started) return;
+        started = false;
+
+        window.removeEventListener('resize', setup);
+
+        for (const bouncer of bouncers) {
+            if (options.insert) bouncer.element.remove();
+        }
+
+        cancelAnimationFrame();
+        setBouncersVisibility(false);
+    };
+
+    const cancelAnimationFrame = () => {
+        if (frameNumber) window.cancelAnimationFrame(frameNumber);
+    };
+
+    const setBouncersVisibility = (show: boolean) => {
+        for (const bouncer of bouncers) {
+            bouncer.element.style.display = show ? 'block' : 'none';
+        }
+    };
+
+    if (options.start) start();
+
+    return { start, stop };
+};
+
+export { createBouncer };
