@@ -22,7 +22,5 @@ export interface BouncingElement {
     direction: number;
 
     tranformers: FrameTransformer[];
-    data: {
-        [key: string]: any;
-    };
+    data: { [key: string]: any };
 }

@@ -1,38 +1,35 @@
 {
-  "name": "bouncing-element",
-  "description": "JavaScript library to reproduce the famous DVD screensaver with any DOM element.",
-  "version": "1.0.7",
-  "author": "Jules Raffoux (https://julesrx.fr)",
-  "homepage": "https://github.com/julesrx/bouncing-element#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/julesrx/bouncing-element.git"
-  },
-  "keywords": [
-    "animation"
-  ],
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/bouncing-element.umd.js",
-  "module": "./dist/bouncing-element.es.js",
-  "types": "./dist/lib/main.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/bouncing-element.es.js",
-      "require": "./dist/bouncing-element.umd.js"
+    "name": "bouncing-element",
+    "description": "JavaScript library to reproduce the famous DVD screensaver with any DOM element.",
+    "version": "2.0.0",
+    "author": "Jules Raffoux (https://julesrx.fr)",
+    "repository": "github:julesrx/bouncing-element",
+    "homepage": "https://github.com/julesrx/bouncing-element",
+    "keywords": [
+        "animation"
+    ],
+    "files": [
+        "dist"
+    ],
+    "main": "./dist/bouncing-element.umd.js",
+    "module": "./dist/bouncing-element.es.js",
+    "types": "./dist/lib/main.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/bouncing-element.es.js",
+            "require": "./dist/bouncing-element.umd.js"
+        }
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "serve": "vite preview",
+        "prepublishOnly": "pnpm build"
+    },
+    "devDependencies": {
+        "@types/node": "^20.9.6",
+        "typescript": "^5.3.2",
+        "vite": "^5.0.6",
+        "vite-plugin-dts": "^3.6.4"
     }
-  },
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "serve": "vite preview",
-    "prepublishOnly": "pnpm build"
-  },
-  "devDependencies": {
-    "@types/node": "^20.9.6",
-    "typescript": "^5.3.2",
-    "vite": "^5.0.6",
-    "vite-plugin-dts": "^3.6.4"
-  }
 }
