@@ -1,28 +1,28 @@
 export interface BouncerOptions {
-  selector?: string;
-
-  frameTransformers: FrameTransformer[];
+    start?: boolean;
+    insert?: boolean;
+    frameTransformers?: FrameTransformer[];
 }
 
 export interface FrameTransformer {
-  key: string;
-  initialValue: any;
-  tranformer(el: BouncingElement , value: any): any;
+    key: string;
+    initialValue: any;
+    tranformer(el: BouncingElement, value: any): any;
 }
 
 export interface BouncingElement {
-  element: HTMLElement;
+    element: HTMLElement;
 
-  x: number;
-  y: number;
+    x: number;
+    y: number;
 
-  xSpeed: number;
-  ySpeed: number;
+    xSpeed: number;
+    ySpeed: number;
 
-  direction: number;
+    direction: number;
 
-  tranformers: FrameTransformer[];
-  data: {
-    [key: string]: any;
-  };
+    tranformers: FrameTransformer[];
+    data: {
+        [key: string]: any;
+    };
 }

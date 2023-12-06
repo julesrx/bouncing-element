@@ -15,3 +15,6 @@ const { start, stop } = createBouncer(els, {
         }
     ]
 });
+
+document.getElementById('start')!.addEventListener('click', start);
+document.getElementById('stop')!.addEventListener('click', stop);
