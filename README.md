@@ -1,6 +1,7 @@
 # Bouncing Element
 
-[![npm](https://img.shields.io/npm/v/bouncing-element/latest)](https://www.npmjs.com/package/bouncing-element)
+[![npm](https://img.shields.io/npm/v/bouncing-element)](https://npmjs.com/bouncing-element)
+[![Build](https://github.com/julesrx/bouncing-element/actions/workflows/build.yml/badge.svg)](https://github.com/julesrx/bouncing-element/actions/workflows/build.yml)
 
 JavaScript library to reproduce the famous DVD screensaver with any DOM element.
 
