@@ -1,78 +1,98 @@
-import { BouncerOptions, BouncingElement } from './interfaces';
+import type { BouncingElement, FrameTransformer } from './interfaces';
 import { random } from './helpers';
 
-class Bouncer {
-  private frameNumber?: number;
-  private elements: BouncingElement[] = [];
-
-  private width: number = window.innerWidth;
-  private height: number = window.innerHeight;
-
-  constructor(options?: BouncerOptions) {
-    this.setup(options);
-    window.addEventListener('resize', this.setup.bind(this, options));
-  }
-
-  private setup(options?: BouncerOptions): void {
-    if (this.frameNumber) window.cancelAnimationFrame(this.frameNumber);
-
-    this.width = window.innerWidth - 5;
-    this.height = window.innerHeight - 5;
-
-    this.elements = [...document.querySelectorAll<HTMLElement>(options?.selector ?? '.bounce')].map(
-      el => {
-        el.style.position = 'absolute';
-
-        return {
-          element: el,
-          x: random(this.width),
-          y: random(this.height),
-          xSpeed: random(2) * (Math.random() > 0.5 ? 1 : -1),
-          ySpeed: random(3) * (Math.random() > 0.5 ? 1 : -1),
-          direction: Math.random() > 0.5 ? 1 : -1,
-          tranformers: options?.frameTransformers ?? [],
-          data: (options?.frameTransformers ?? []).reduce(
-            (d: any, t) => ((d[t.key] = t.initialValue), d),
-            {}
-          )
-        };
-      }
-    );
-
-    this.frameNumber = window.requestAnimationFrame(this.frame.bind(this));
-  }
-
-  private frame(): void {
-    for (const el of this.elements) {
-      for (const t of el.tranformers) {
-        el.data[t.key] = t.tranformer(el, el.data[t.key]);
-      }
-
-      el.x = el.x + el.xSpeed;
-      el.y = el.y + el.ySpeed;
-
-      el.element.style.left = `${el.x}px`;
-      el.element.style.top = `${el.y}px`;
-
-      if (el.x + el.element.clientWidth >= this.width) {
-        el.xSpeed = -el.xSpeed;
-        el.x = this.width - el.element.clientWidth;
-      } else if (el.x <= 0) {
-        el.xSpeed = -el.xSpeed;
-        el.x = 0;
-      }
-
-      if (el.y + el.element.clientHeight >= this.height) {
-        el.ySpeed = -el.ySpeed;
-        el.y = this.height - el.element.clientHeight;
-      } else if (el.y <= 0) {
-        el.ySpeed = -el.ySpeed;
-        el.y = 0;
-      }
-    }
-
-    this.frameNumber = window.requestAnimationFrame(this.frame.bind(this));
-  }
+export interface Options {
+    start?: boolean;
+    frameTransformers?: FrameTransformer[];
 }
 
-export default Bouncer;
+const createBouncer = (elements: HTMLElement[], options?: Options) => {
+    options = { start: true, frameTransformers: [], ...options };
+
+    let started = false;
+    let bouncers: BouncingElement[];
+    let width: number;
+    let height: number;
+    let frameNumber: number;
+
+    const start = () => {
+        if (started) return;
+        started = true;
+
+        setup();
+        window.addEventListener('resize', setup);
+    };
+
+    const setup = (): void => {
+        if (frameNumber) window.cancelAnimationFrame(frameNumber);
+
+        width = window.innerWidth - 5;
+        height = window.innerHeight - 5;
+
+        bouncers = elements.map(el => {
+            el.style.position = 'absolute';
+
+            return {
+                element: el,
+                x: random(width),
+                y: random(height),
+                xSpeed: random(2) * (Math.random() > 0.5 ? 1 : -1),
+                ySpeed: random(3) * (Math.random() > 0.5 ? 1 : -1),
+                direction: Math.random() > 0.5 ? 1 : -1,
+                tranformers: options?.frameTransformers ?? [],
+                data: (options?.frameTransformers ?? []).reduce(
+                    (d: any, t) => ((d[t.key] = t.initialValue), d),
+                    {}
+                )
+            };
+        });
+
+        frameNumber = window.requestAnimationFrame(frame);
+    };
+
+    const frame = (): void => {
+        for (const bo of bouncers) {
+            for (const t of bo.tranformers) {
+                bo.data[t.key] = t.tranformer(bo, bo.data[t.key]);
+            }
+
+            bo.x = bo.x + bo.xSpeed;
+            bo.y = bo.y + bo.ySpeed;
+
+            bo.element.style.left = `${bo.x}px`;
+            bo.element.style.top = `${bo.y}px`;
+
+            if (bo.x + bo.element.clientWidth >= width) {
+                bo.xSpeed = -bo.xSpeed;
+                bo.x = width - bo.element.clientWidth;
+            } else if (bo.x <= 0) {
+                bo.xSpeed = -bo.xSpeed;
+                bo.x = 0;
+            }
+
+            if (bo.y + bo.element.clientHeight >= height) {
+                bo.ySpeed = -bo.ySpeed;
+                bo.y = height - bo.element.clientHeight;
+            } else if (bo.y <= 0) {
+                bo.ySpeed = -bo.ySpeed;
+                bo.y = 0;
+            }
+        }
+
+        frameNumber = window.requestAnimationFrame(frame);
+    };
+
+    const stop = () => {
+        if (!started) return;
+        started = false;
+
+        // TODO: stop all animations and hide
+        window.removeEventListener('resize', setup);
+    };
+
+    if (options.start) start();
+
+    return { start, stop };
+};
+
+export { createBouncer };
