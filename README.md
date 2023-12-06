@@ -21,29 +21,24 @@ npm i bouncing-element
 ## Usage
 
 ```ts
-import Bouncer from 'bouncing-element'; // if installed via NPM
+import { createBouncer } from 'bouncing-element';
 
 // Create the bouncer
-new Bouncer({
-  // querySelector (default '.bounce')
-  selector: '.bounce',
+const { start, stop } = createBouncer(elements, {
+    // set to true to insert the elements to the body (default: false)
+    insert: true,
 
-  // frame transformers (default [])
-  // used to add different effects to the elements for each frame
-  frameTransformers: [
-    {
-      // tranform key
-      key: 'hue',
-
-      // initial value
-      initialValue: 0,
-
-      // tranform function
-      tranformer: (bouncingEl, value) => {
-        bouncingEl.element.style.color = `hsl(${value}, 100%, 50%)`;
-        return value == 360 ? 0 : value + 1;
-      }
-    }
-  ]
+    // frame transformers (default: [])
+    // used to add different effects to the elements for each frame
+    frameTransformers: [
+        {
+            key: 'hue',
+            initialValue: 0,
+            tranformer: (el, value) => {
+                el.element.style.color = `hsl(${value}, 100%, 50%)`;
+                return value == 360 ? 0 : value + 1;
+            }
+        }
+    ]
 });
 ```
