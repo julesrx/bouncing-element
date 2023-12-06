@@ -1,6 +1,7 @@
 export interface BouncerOptions {
     start?: boolean;
     insert?: boolean;
+    startOffset?: number;
     frameTransformers?: FrameTransformer[];
 }
 

@@ -26,8 +26,14 @@ import { createBouncer } from 'bouncing-element';
 
 // Create the bouncer
 const { start, stop } = createBouncer(elements, {
+    // start the animation when creating the bouncer (default: true)
+    start: true,
+
     // set to true to insert the elements to the body (default: false)
-    insert: true,
+    insert: false,
+
+    // distance in pixels to the screen borders (default: 50)
+    startOffset: false,
 
     // frame transformers (default: [])
     // used to add different effects to the elements for each frame

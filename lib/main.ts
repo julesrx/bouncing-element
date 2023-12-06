@@ -1,11 +1,16 @@
 import type { BouncingElement, BouncerOptions } from './interfaces';
-import { random } from './utils';
+import { getRandomScreenPosition, getRandomSpeed } from './utils';
 
 const createBouncer = (
     elements: HTMLElement[] | HTMLCollectionOf<HTMLElement> | HTMLCollectionOf<Element>,
     opts?: BouncerOptions
 ) => {
-    const options = { start: true, insert: false, frameTransformers: [], ...opts };
+    const options: BouncerOptions = {
+        start: true,
+        insert: false,
+        frameTransformers: [],
+        ...opts
+    };
 
     let started = false;
     let bouncers: BouncingElement[];
@@ -31,15 +36,17 @@ const createBouncer = (
             const element = el as HTMLElement;
 
             element.style.position = 'absolute';
+            element.style.left = `${width / 2}px`;
+            element.style.top = `${height / 2}px`;
 
             if (options.insert) document.body.appendChild(element);
 
             return {
                 element,
-                x: random(width),
-                y: random(height),
-                xSpeed: random(2) * (Math.random() > 0.5 ? 1 : -1),
-                ySpeed: random(3) * (Math.random() > 0.5 ? 1 : -1),
+                x: getRandomScreenPosition(width, element.clientWidth, options.startOffset),
+                y: getRandomScreenPosition(height, element.clientHeight, options.startOffset),
+                xSpeed: getRandomSpeed(2),
+                ySpeed: getRandomSpeed(3),
                 direction: Math.random() > 0.5 ? 1 : -1,
                 tranformers: opts?.frameTransformers ?? [],
                 data: (opts?.frameTransformers ?? []).reduce(
