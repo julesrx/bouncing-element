@@ -93,6 +93,10 @@ const createBouncer = (
 
         window.removeEventListener('resize', setup);
 
+        for (const bouncer of bouncers) {
+            if (options.insert) bouncer.element.remove();
+        }
+
         cancelAnimationFrame();
         setBouncersVisibility(false);
     };

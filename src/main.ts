@@ -1,9 +1,27 @@
 import './style.css';
 import { createBouncer } from '../lib/main';
+import favicon from '../favicon.svg?raw';
 
-const els = [...document.getElementsByClassName('bounce')] as HTMLElement[];
+const emojis = ['🐧', '🌱', '👨‍💻', '🎮', '🍝', '🌈', '📀', '🎬', '🏍', '🐸', '🚀'];
 
-const { start, stop } = createBouncer(els, {
+const elements = new Array(5)
+    .fill(emojis)
+    .flat()
+    .map(e => {
+        const el = document.createElement('i');
+        el.innerText = e;
+
+        return el;
+    });
+
+const div = document.createElement('div');
+div.innerHTML = favicon;
+const svg = div.querySelector('svg');
+
+elements.push(svg as unknown as HTMLElement);
+
+const { start, stop } = createBouncer(elements, {
+    insert: true,
     frameTransformers: [
         {
             key: 'hue',
