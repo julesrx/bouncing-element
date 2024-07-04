@@ -2,7 +2,7 @@
   "name": "bouncing-element",
   "private": false,
   "type": "module",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "JavaScript library to reproduce the famous DVD screensaver with any DOM element.",
   "keywords": [
     "typescript",
