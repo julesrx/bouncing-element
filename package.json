@@ -28,7 +28,6 @@
   "packageManager": "pnpm@9.4.0",
   "scripts": {
     "build": "tsc && unbuild",
-    "test": "vitest",
     "release": "release-it"
   },
   "devDependencies": {
